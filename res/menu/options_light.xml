@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item 
+        android:title="Official Website"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_light_browser"
+        android:id="@+id/menu_options_official_website"
+        />
+	 
+    <item 
+        android:title="Google Search"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_light_google"
+        android:id="@+id/menu_options_google"
+        />
+    
+    <item 
+        android:title="Wikipedia Page"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_light_wikipedia"
+        android:id="@+id/menu_options_wikipedia"
+        />
+</menu>

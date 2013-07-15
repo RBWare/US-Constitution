@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item 
+        android:title="Official Website"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_dark_browser"
+        />
+	 
+    <item 
+        android:title="Google Search"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_dark_google"
+        />
+    
+    <item 
+        android:title="Wikipedia Page"
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/actionitem_dark_wikipedia"
+        />
+</menu>
