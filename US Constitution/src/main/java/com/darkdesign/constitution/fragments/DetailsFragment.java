@@ -1,24 +1,14 @@
 package com.darkdesign.constitution.fragments;
 
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.darkdesign.constitution.Globals;
-import com.darkdesign.constitution.Main;
 import com.darkdesign.constitution.R;
 import com.darkdesign.constitution.models.DataObject;
 
@@ -44,7 +34,7 @@ public class DetailsFragment extends Fragment {
 //		setHasOptionsMenu(true);
 //
 ////		if (isABSSupport()) {
-////			Main.getThisActionBar().setDisplayHomeAsUpEnabled(true);
+////			ListActivity.getThisActionBar().setDisplayHomeAsUpEnabled(true);
 ////		}
 //
 //		return inflater.inflate(R.layout.view_information);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:holo="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical" 
@@ -24,7 +23,7 @@
                 android:text="Use Light Theme"
                 android:textSize="14sp"
                 />
-            <com.WazaBe.HoloEverywhere.widget.Switch
+            <CheckBox
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:id="@+id/settings_dialog_switch_theme"
@@ -41,7 +40,7 @@
                 android:text="Show Splash Screen"
                 android:textSize="14sp"
                 />
-            <com.WazaBe.HoloEverywhere.widget.Switch
+            <CheckBox
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:id="@+id/settings_dialog_switch_splash"
