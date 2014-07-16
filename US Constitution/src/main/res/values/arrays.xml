@@ -16,13 +16,6 @@
  -->
 <resources>
     
-    <string-array name="fragments">
-        <item>Main</item>
-        <item>Settings</item>
-        <item>About</item>
-    </string-array>
-
-    
     <!-- TO MOVE -->
     
     <string-array name="massachusettsbodyofliberties">

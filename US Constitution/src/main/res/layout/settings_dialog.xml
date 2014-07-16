@@ -47,26 +47,4 @@
 		        />
         </TableRow>
     </TableLayout>
-    
-    <!-- TODO - Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Save"
-            android:id="@+id/settings_dialog_button_save"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Cancel"
-            android:id="@+id/settings_dialog_button_cancel"
-            />
-    </LinearLayout>
 </LinearLayout>

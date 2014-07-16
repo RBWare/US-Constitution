@@ -3,7 +3,9 @@ package com.darkdesign.constitution.fragments;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -13,6 +15,8 @@ import com.darkdesign.constitution.R;
 import com.darkdesign.constitution.models.DataObject;
 
 public class DetailsFragment extends Fragment {
+
+    public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
 
 	private static DetailsFragment instance;
 
@@ -27,18 +31,26 @@ public class DetailsFragment extends Fragment {
 		instance = this;
 	}
 
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//			Bundle savedInstanceState) {
-//
-//		setHasOptionsMenu(true);
-//
-////		if (isABSSupport()) {
-////			ListActivity.getThisActionBar().setDisplayHomeAsUpEnabled(true);
-////		}
-//
-//		return inflater.inflate(R.layout.view_information);
-//	}
+    public static final DetailsFragment newInstance(String message) {
+
+        DetailsFragment f = new DetailsFragment();
+        Bundle bdl = new Bundle(1);
+        bdl.putString(EXTRA_MESSAGE, message);
+        f.setArguments(bdl);
+
+        return f;
+
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+//        String message = getArguments().getString(EXTRA_MESSAGE);
+		setHasOptionsMenu(true);
+
+		return inflater.inflate(R.layout.view_information, container, false);
+	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -51,6 +63,7 @@ public class DetailsFragment extends Fragment {
 		super.onResume();
 	}
 
+    // TODO
 //	@Override
 //	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //
@@ -224,79 +237,81 @@ public class DetailsFragment extends Fragment {
 
 		// TODO - Finish setting these up and adding them to the linear layout
 		TextView textviewTitle = new TextView(getActivity());
-		textviewTitle.setText(thisObject.getTitle());
+		textviewTitle.setText("ryan");
 		textviewTitle.setTextSize(22);
+        textviewTitle.setTextColor(getResources().getColor(android.R.color.white));
 		textviewTitle.setLayoutParams(titleLayoutParams);
 		informationLayout.addView(textviewTitle);
 
-		// Does this exist?
-		if (!"".equals(thisObject.getAdditionalInformation())) {
-			TextView textviewExtraInfo = new TextView(getActivity());
-			textviewExtraInfo.setText(thisObject.getAdditionalInformation());
-			textviewExtraInfo.setTextSize(14);
-			textviewExtraInfo.setLayoutParams(extraLayoutParams);
-			informationLayout.addView(textviewExtraInfo);
-		}
+//
+//		// Does this exist?
+//		if (!"".equals(thisObject.getAdditionalInformation())) {
+//			TextView textviewExtraInfo = new TextView(getActivity());
+//			textviewExtraInfo.setText(thisObject.getAdditionalInformation());
+//			textviewExtraInfo.setTextSize(14);
+//			textviewExtraInfo.setLayoutParams(extraLayoutParams);
+//			informationLayout.addView(textviewExtraInfo);
+//		}
+//
+//		// Does this exist?
+//		if (!"".equals(thisObject.getNotes())) {
+//			TextView textviewNotes = new TextView(getActivity());
+//			textviewNotes.setText(thisObject.getNotes());
+//			textviewNotes.setTextSize(12);
+//			textviewNotes.setTypeface(null, Typeface.ITALIC);
+//			textviewNotes.setLayoutParams(notesLayoutParams);
+//			informationLayout.addView(textviewNotes);
+//		}
+//
+//		if (!thisObject.getSection().isEmpty()) {
+//			for (int i = 0; i < thisObject.getSection().size(); i++) {
+//
+//				// Title
+//				if (!"".equals(thisObject.getSection().get(i).getTitle())) {
+//					TextView textviewSectionTitle = new TextView(getActivity());
+//					textviewSectionTitle.setText(thisObject.getSection().get(i)
+//							.getTitle());
+//					textviewSectionTitle.setTextSize(18);
+//					textviewSectionTitle.setLayoutParams(titleLayoutParams);
+//					informationLayout.addView(textviewSectionTitle);
+//				}
+//
+//				// Extra Info
+//				if (!"".equals(thisObject.getSection().get(i)
+//						.getAdditionalInformation())) {
+//					TextView textviewSectionInfo = new TextView(getActivity());
+//					textviewSectionInfo.setText(thisObject.getSection().get(i)
+//							.getAdditionalInformation());
+//					textviewSectionInfo.setTextSize(14);
+//					textviewSectionInfo.setLayoutParams(extraLayoutParams);
+//					informationLayout.addView(textviewSectionInfo);
+//				}
+//
+//				// Notes
+//				if (!"".equals(thisObject.getSection().get(i).getNotes())) {
+//					TextView textviewSectionNotes = new TextView(getActivity());
+//					textviewSectionNotes.setText(thisObject.getSection().get(i)
+//							.getNotes());
+//					textviewSectionNotes.setTextSize(12);
+//					textviewSectionNotes.setTypeface(null, Typeface.ITALIC);
+//					textviewSectionNotes.setLayoutParams(notesLayoutParams);
+//					informationLayout.addView(textviewSectionNotes);
+//				}
+//
+//				// Body Text
+//				TextView textviewSectionText = new TextView(getActivity());
+//				textviewSectionText.setText(thisObject.getSection().get(i)
+//						.getText());
+//				textviewSectionText.setTextSize(14);
+//				textviewSectionText.setLayoutParams(notesLayoutParams);
+//				informationLayout.addView(textviewSectionText);
+//			}
+//		}
 
-		// Does this exist?
-		if (!"".equals(thisObject.getNotes())) {
-			TextView textviewNotes = new TextView(getActivity());
-			textviewNotes.setText(thisObject.getNotes());
-			textviewNotes.setTextSize(12);
-			textviewNotes.setTypeface(null, Typeface.ITALIC);
-			textviewNotes.setLayoutParams(notesLayoutParams);
-			informationLayout.addView(textviewNotes);
-		}
-
-		if (!thisObject.getSection().isEmpty()) {
-			for (int i = 0; i < thisObject.getSection().size(); i++) {
-
-				// Title
-				if (!"".equals(thisObject.getSection().get(i).getTitle())) {
-					TextView textviewSectionTitle = new TextView(getActivity());
-					textviewSectionTitle.setText(thisObject.getSection().get(i)
-							.getTitle());
-					textviewSectionTitle.setTextSize(18);
-					textviewSectionTitle.setLayoutParams(titleLayoutParams);
-					informationLayout.addView(textviewSectionTitle);
-				}
-
-				// Extra Info
-				if (!"".equals(thisObject.getSection().get(i)
-						.getAdditionalInformation())) {
-					TextView textviewSectionInfo = new TextView(getActivity());
-					textviewSectionInfo.setText(thisObject.getSection().get(i)
-							.getAdditionalInformation());
-					textviewSectionInfo.setTextSize(14);
-					textviewSectionInfo.setLayoutParams(extraLayoutParams);
-					informationLayout.addView(textviewSectionInfo);
-				}
-
-				// Notes
-				if (!"".equals(thisObject.getSection().get(i).getNotes())) {
-					TextView textviewSectionNotes = new TextView(getActivity());
-					textviewSectionNotes.setText(thisObject.getSection().get(i)
-							.getNotes());
-					textviewSectionNotes.setTextSize(12);
-					textviewSectionNotes.setTypeface(null, Typeface.ITALIC);
-					textviewSectionNotes.setLayoutParams(notesLayoutParams);
-					informationLayout.addView(textviewSectionNotes);
-				}
-
-				// Body Text
-				TextView textviewSectionText = new TextView(getActivity());
-				textviewSectionText.setText(thisObject.getSection().get(i)
-						.getText());
-				textviewSectionText.setTextSize(14);
-				textviewSectionText.setLayoutParams(notesLayoutParams);
-				informationLayout.addView(textviewSectionText);
-			}
-		}
-
-		ScrollView mainLayout = (ScrollView) getView().findViewById(
-				R.id.information);
-		mainLayout.removeAllViews();
-		mainLayout.addView(informationLayout);
+//		ScrollView mainLayout = (ScrollView) getView().findViewById(
+//				R.id.information);
+//		mainLayout.removeAllViews();
+//		mainLayout.addView(informationLayout);
 		// setContentView(mActivityScrollView);
 	}
 }

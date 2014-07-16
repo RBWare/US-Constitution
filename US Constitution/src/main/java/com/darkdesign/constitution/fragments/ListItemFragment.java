@@ -82,7 +82,7 @@ public class ListItemFragment extends ListFragment {
             // TODO - Add to bundle, not some random global variable
 
             Intent i = new Intent(getActivity(), DetailsActivity.class);
-            i.putExtra("itemType", Globals.LIST_TYPE_CONSTITUTION); // TODO
+            i.putExtra("itemTypeCount", adapter.getCount()); // TODO
             i.putExtra("itemPosition", position);
             startActivity(i);
 		}

@@ -2,6 +2,7 @@ package com.darkdesign.constitution.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -25,10 +26,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
-import com.darkdesign.constitution.dialogs.SettingsDialog;
 import com.darkdesign.constitution.fragments.ListItemFragment;
 import com.darkdesign.constitution.R;
+import com.darkdesign.constitution.utils.Globals;
 
 public class ListActivity extends ActionBarActivity {
 
@@ -52,15 +54,10 @@ public class ListActivity extends ActionBarActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         mPager = (ViewPager) findViewById(R.id.pager);
-//        mTabStrip = (PagerTabStrip) findViewById(R.id.pts_main);
 
-
-        String[] values = new String[]{
-                "Settings",
-                "About"
-        };
+        String[] navItems = getResources().getStringArray(R.array.nav_drawer_items);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                android.R.layout.simple_list_item_1, android.R.id.text1, navItems);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -168,40 +165,58 @@ public class ListActivity extends ActionBarActivity {
 
     public void selectItem(int position) {
 
-        // TODO
         switch(position){
             case 0:
-                new SettingsDialog(this).show();
+                showSettingsDialog();
                 break;
             case 1:
                 showAboutDialog();
                 break;
-            // TODO - 0 - Settings
             default:
                 // Nothing
                 break;
         }
 
-        /*
-        case R.id.action_item_about:
-            showAboutDialog();
-            break;
-        case R.id.action_item_settings:
-
-			break;
-         */
-
         // Close after selection
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void showSettingsDialog(){
+        AlertDialog.Builder settingsDialogBuilder = new AlertDialog.Builder(this);
+        View settingsDialogView = getLayoutInflater().inflate(R.layout.settings_dialog, null);
+        final CheckBox checkboxLightTheme = (CheckBox)settingsDialogView.findViewById(R.id.settings_dialog_switch_theme);
+        final CheckBox checkboxSplashScreen = (CheckBox)settingsDialogView.findViewById(R.id.settings_dialog_switch_splash);
+
+        settingsDialogBuilder.setView(settingsDialogView);
+        settingsDialogBuilder.setTitle(getString(R.string.settings_header));
+
+        settingsDialogBuilder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                Globals.showSplash = checkboxSplashScreen.isChecked();
+                SharedPreferences prefs = getSharedPreferences(
+                        Globals.preferencesFile, 0);
+
+                prefs.edit().putBoolean("splash", Globals.showSplash).commit();
+                prefs.edit().putBoolean("lightTheme", checkboxLightTheme.isChecked()).commit();
+
+                Log.d("Settings", "Saved");
+
+                // TODO - Switch themes
+
+            } });
+
+        settingsDialogBuilder.setNegativeButton(getString(R.string.cancel), null); // Nothing to do
+        settingsDialogBuilder.show();
     }
 
     private void showAboutDialog(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog aboutDialog;
-        builder.setTitle("About US Constitution");
+        builder.setTitle(getString(R.string.about_header));
         builder.setMessage(getString(R.string.about_application));
-        builder.setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -215,18 +230,11 @@ public class ListActivity extends ActionBarActivity {
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        public final String[] Titles = {
-                "US Constitution",
-                "More Information",
-                "Similar Documents"
-        };
-
-
-        // Declare the number of ViewPager pages
-        final int PAGE_COUNT = 3;
-
+        private String[] sectionTitles;
         public ViewPagerAdapter(FragmentManager fm) {
+
             super(fm);
+            sectionTitles = getResources().getStringArray(R.array.section_headers);
         }
 
         @Override
@@ -242,12 +250,12 @@ public class ListActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return PAGE_COUNT;
+            return sectionTitles.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return Titles[position];
+            return sectionTitles[position];
         }
 
     }

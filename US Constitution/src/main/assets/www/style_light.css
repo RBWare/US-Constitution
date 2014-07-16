@@ -1,0 +1,42 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body{
+	padding-left:10px;
+	padding-right:10px;
+}
+
+pre{
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+#extra-info{
+	font-size:16px;
+	font-style:italic;
+	text-align:center;
+	font-family:sans-serif;
+}
+
+#section-header{
+	font-size:20px;
+	font-weight:bold;
+	font-family:sans-serif;
+}
+
+#clause-header{
+	font-size:16px;
+	color: #000000;
+	font-family:sans-serif;
+}
+
+#main-text{
+	font-size:14px;
+	color: #000000;
+	font-family:sans-serif;
+}
+
+

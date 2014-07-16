@@ -16,9 +16,28 @@
  -->
 <resources>    
     <string name="app_name">US Constitution</string>
-    
+
+    <!-- Dialog Strings -->
+    <string name="settings_header">Settings</string>
+
+    <string name="about_header">About US Constitution</string>
     <string name="about_application">Programmed By Ryan T. Bailey\n\nThis application is dedicated to my loving parents.</string>
-	
-    <string name="contributor_actionbarsherlock">ActionBarSherlock by Jake Wharton\nhttp://www.actionbarsherlock.com</string>
-    <string name="contributor_holoeverywhere">HoloEverywhere Copyright (c) 2012 Christophe Versieux, Sergey Shatunov\nhttp://www.holoeverywhere.com</string>
+
+    <!-- Main Application Tab Headers -->
+    <string-array name="section_headers">
+        <item>US Constitution</item>
+        <item>More Information</item>
+        <item>Similar Documents</item>
+    </string-array>
+
+    <!-- Nav Drawer Items -->
+    <string-array name="nav_drawer_items">
+        <item>Settings</item>
+        <item>About</item>
+    </string-array>
+
+    <!-- Common Strings-->
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="save">Save</string>
 </resources>
