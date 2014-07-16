@@ -33,7 +33,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.darkdesign.constitution.R;
-import com.darkdesign.constitution.fragments.DetailsFragment;
 import com.darkdesign.constitution.utils.Globals;
 
 import java.util.ArrayList;
