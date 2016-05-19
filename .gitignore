@@ -34,8 +34,11 @@ gradle.properties
 .idea/*
 *.iml
 
-#orig files
+# orig files
 *.orig
+
+# We also don't need local.properties, Studio should apply that directly
+local.properties
 
 # Other unneeded files
 .DS_Store
