@@ -15,126 +15,148 @@
 
 package com.darkdesign.constitution.activities;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
-import com.darkdesign.constitution.utils.Globals;
 import com.darkdesign.constitution.R;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 
-import com.darkdesign.constitution.utils.sql.DatabaseHelper;
+import com.darkdesign.constitution.sql.DatabaseHelper;
+
 
 public class SplashActivity extends Activity {
 
-    private static String DB_PATH = "/data/data/com.darkdesign.constitution/databases/";
-    private static String DB_NAME ="constitution.db";// Database name
+    private final int DEFAULT_SPLASH_DISPLAY_LENGTH = 2500;
+    private int mSplashDisplayLength;
 
-    private static int SPLASH_DISPLAY_LENGTH = 2500;
+    private String mDatabasePath;
+    private boolean mIsContentDisplayed = false;
+    private DatabaseHelper mDbHelper;
 
-    // ===========================================================
-    // "Constructors"
-    // ===========================================================
 
-    /** Called when the activity is first created. */
+    private static final String CSS_REPLACE_KEY = "%CSS";
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        try{
-            createDataBase();
-        } catch(IOException e){
-            Log.e(getLocalClassName(), e.toString());
-        }
+        mDatabasePath = getDatabasePath(DatabaseHelper.DATABASE_NAME).getPath();
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        dbHelper.setupSectionData();
 
-        if (Globals.showSplash == false) {
-            Intent i = new Intent(this, ListActivity.class);
-            startActivity(i);
-            SplashActivity.this.finish();
+        if (databaseExists() && htmlExists()){
+            Log.d("Splash", "No file setup needed");
+            startSplashTimer();
         } else {
-            SPLASH_DISPLAY_LENGTH = 2500;
-
             setContentView(R.layout.splash);
 
-			/*
-			 * New Handler to start the Menu-Activity and close this
-			 * SplashActivity-Screen after some seconds.
-			 */
-            new Handler().postDelayed(new Runnable() {
-                // @Override
-                public void run() {
-
-					/* Create an Intent that will start the Menu-Activity. */
-                    Intent mainIntent = new Intent(SplashActivity.this, ListActivity.class);
-                    SplashActivity.this.startActivity(mainIntent);
-                    SplashActivity.this.finish();
-                }
-            }, SPLASH_DISPLAY_LENGTH);
+            mDbHelper = new DatabaseHelper(this);
+            mIsContentDisplayed = true;
+            Log.d("Splash", "Some files not found, setup starting");
+            new SetupAsyncTask(this).execute();
         }
     }
 
-    private void retreiveSettings() {
-        SharedPreferences prefs = getSharedPreferences(Globals.preferencesFile,
-                0);
+    private void startSplashTimer(){
+        // If we show splash, default delay, if not, 0 for handler delay time in ms
+        mSplashDisplayLength = isDisplaySplash() ? DEFAULT_SPLASH_DISPLAY_LENGTH : 0;
 
-        Globals.showSplash = prefs.getBoolean("splash", true);
+        if (mSplashDisplayLength != 0 && !mIsContentDisplayed)
+            setContentView(R.layout.splash);
 
-        boolean temp = prefs.getBoolean("lightTheme", false);
-        if (temp)
-            Globals.currentTheme = Globals.THEME_LIGHT;
-        else
-            Globals.currentTheme = Globals.THEME_DARK;
+        /*
+         * Handler to start the main activity and close this
+         * splash screen after some seconds.
+         */
+        new Handler().postDelayed(new Runnable() {
+            // @Override
+            public void run() {
+
+                /* Create an Intent that will start the Menu-Activity. */
+                Intent mainIntent = new Intent(SplashActivity.this, ListActivity.class);
+                SplashActivity.this.startActivity(mainIntent);
+                SplashActivity.this.finish();
+            }
+        }, mSplashDisplayLength);
     }
 
-    public void createDataBase() throws IOException
-    {
-        //If database not exists copy it from the assets
+    private boolean isDisplaySplash() {
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_shared_prefs),
+                Context.MODE_PRIVATE);
 
-        boolean mDataBaseExist = checkDataBase();
-        if(!mDataBaseExist)
-        {
-            try
-            {
-                //Copy the database from assests
-                copyDataBase();
-                Log.e("App", "createDatabase database created");
+        return prefs.getBoolean(getString(R.string.settings_pref_splash_enabled), true);
+    }
+
+
+
+    private void setupDatabase() throws IOException {
+
+        if(!databaseExists()) {
+            try  {
+                //Copy the database from assets
+                copyDatabase();
+                Log.d("Splash", "Database created");
             }
-            catch (IOException mIOException)
-            {
+            catch (IOException mIOException) {
                 throw new Error("ErrorCopyingDataBase");
             }
         }
     }
 
-    private boolean checkDataBase()
-    {
-        File dbFile = new File(DB_PATH + DB_NAME);
+    private boolean databaseExists() {
+
+        File dbFile = new File(mDatabasePath);
+
+        if (!dbFile.getParentFile().exists())
+            dbFile.getParentFile().mkdir();
+
         return dbFile.exists();
     }
 
-    private void copyDataBase() throws IOException {
-        InputStream mInput = getApplicationContext().getAssets().open(DB_NAME);
-        String outFileName = DB_PATH + DB_NAME;
+    private boolean htmlExists() {
+        File htmlFile = new File(getFilesDir().getPath() + "/www");
+        if (htmlFile.exists()){
+            if (htmlFile.listFiles().length > 0)
+                return true;
+        } else {
+            htmlFile.mkdir();
+            return false;
+        }
 
-        File outputDirectory = new File(DB_PATH);
-        if (!outputDirectory.exists())
-            outputDirectory.mkdirs();
+        return false;
+    }
 
-        OutputStream mOutput = new FileOutputStream(outFileName);
+    private void setupSharedPrefs(){
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_shared_prefs), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(getString(R.string.settings_pref_splash_enabled), true).commit();
+        editor.putBoolean(getString(R.string.settings_pref_theme_light), false).commit();
+
+        Log.d("Splash", "SharedPrefs setup completed.");
+    }
+
+    private void copyDatabase() throws IOException {
+        InputStream mInput = getApplicationContext().getAssets().open(DatabaseHelper.DATABASE_NAME);
+
+        OutputStream mOutput = new FileOutputStream(mDatabasePath);
         byte[] mBuffer = new byte[1024];
         int mLength;
         while ((mLength = mInput.read(mBuffer)) > 0) {
@@ -143,5 +165,107 @@ public class SplashActivity extends Activity {
         mOutput.flush();
         mOutput.close();
         mInput.close();
+
+        Log.d("Splash", "Database copy completed.");
+    }
+
+    private void setupHtmlFiles(Context context){
+
+        // keep one instance of the HTML string! save both files right away!
+
+        // We will continually reuse these until we finish with this method
+        String lightVariantCss = readAssetFile("style_light.css");
+        String darkVariantCss = readAssetFile("style_dark.css");
+
+        int entryCount = mDbHelper.getEntryCount();
+        for (int i = 0; i < entryCount; i++){
+            String htmlData = mDbHelper.getHTMLDataForEntry(i);
+
+            String currentVariantHtml = htmlData.replace(CSS_REPLACE_KEY, lightVariantCss);
+            String fileName = i + "_light.html";
+            writeTextToFile(fileName, currentVariantHtml);
+
+            currentVariantHtml = htmlData.replace(CSS_REPLACE_KEY, darkVariantCss);
+            fileName = i + "_dark.html";
+            writeTextToFile(fileName, currentVariantHtml);
+        }
+
+        Log.d("Splash", "HTML setup completed.");
+    }
+
+    private boolean writeTextToFile(String fileName, String fileText) {
+        try {
+
+
+            File root = new File(getFilesDir().getPath() + "/www/");
+            if (!root.exists())
+                root.mkdirs();
+
+            File fileToWrite = new File(root, fileName);
+            FileWriter writer = new FileWriter(fileToWrite);
+            writer.append(fileText);
+            writer.flush();
+            writer.close();
+
+            Log.d("Splash", "File written: " + fileName);
+            return true;
+        } catch (IOException e) {
+            Log.e("Splash", "IOException creating HTML file");
+            return false;
+        }
+    }
+
+    private String readAssetFile(String fileName) {
+        String fileData = "";
+
+        try {
+            InputStream stream = getAssets().open(fileName);
+
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            stream.close();
+            fileData = new String(buffer);
+        } catch (IOException e) {
+            // Handle exceptions here
+        }
+
+        return fileData;
+    }
+
+    private class SetupAsyncTask extends AsyncTask<Void, Integer, Void>{
+
+        private Context mContext;
+        private ProgressDialog mProgressDialog;
+
+        public SetupAsyncTask(Context context){
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            setupSharedPrefs();
+            try {
+                setupDatabase();
+            } catch(IOException e){
+                Log.e("Splash", "Database setup failed!");
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            setupHtmlFiles(mContext);
+//            mProgressDialog.dismiss();
+            startSplashTimer();
+        }
     }
 }

@@ -32,7 +32,6 @@
         <activity android:name=".activities.DetailsActivity"
                   android:label="@string/app_name"
                   android:configChanges="orientation|keyboardHidden"
-                  android:uiOptions="splitActionBarWhenNarrow"
                 />
     </application>
 

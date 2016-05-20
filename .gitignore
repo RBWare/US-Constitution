@@ -40,5 +40,9 @@ gradle.properties
 # We also don't need local.properties, Studio should apply that directly
 local.properties
 
+# Don't include any of the "assets".
+*.db
+*.css
+
 # Other unneeded files
 .DS_Store

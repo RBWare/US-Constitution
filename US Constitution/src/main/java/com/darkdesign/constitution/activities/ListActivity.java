@@ -1,6 +1,7 @@
 package com.darkdesign.constitution.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -30,7 +31,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import com.darkdesign.constitution.fragments.ListItemFragment;
 import com.darkdesign.constitution.R;
-import com.darkdesign.constitution.utils.Globals;
+import com.darkdesign.constitution.sql.DatabaseHelper;
+
+import java.util.ArrayList;
 
 public class ListActivity extends ActionBarActivity {
 
@@ -48,7 +51,6 @@ public class ListActivity extends ActionBarActivity {
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -91,22 +93,6 @@ public class ListActivity extends ActionBarActivity {
         // Activate Fragment Manager
         FragmentManager fm = getSupportFragmentManager();
 
-        mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         // Locate the adapter class called ViewPagerAdapter.java
         ViewPagerAdapter viewpageradapter = new ViewPagerAdapter(fm);
         // Set the View Pager Adapter into ViewPager
@@ -187,18 +173,24 @@ public class ListActivity extends ActionBarActivity {
         final CheckBox checkboxLightTheme = (CheckBox)settingsDialogView.findViewById(R.id.settings_dialog_switch_theme);
         final CheckBox checkboxSplashScreen = (CheckBox)settingsDialogView.findViewById(R.id.settings_dialog_switch_splash);
 
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_shared_prefs), Context.MODE_PRIVATE);
+
+        Log.e("Fuck", "You: " + prefs.getBoolean(getString(R.string.settings_pref_theme_light), false));
+        Log.e("Fuck", "You: " + prefs.getBoolean(getString(R.string.settings_pref_splash_enabled), false));
+
+        checkboxLightTheme.setChecked(prefs.getBoolean(getString(R.string.settings_pref_theme_light), false));
+        checkboxSplashScreen.setChecked(prefs.getBoolean(getString(R.string.settings_pref_splash_enabled), true));
+
         settingsDialogBuilder.setView(settingsDialogView);
         settingsDialogBuilder.setTitle(getString(R.string.settings_header));
 
         settingsDialogBuilder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                Globals.showSplash = checkboxSplashScreen.isChecked();
-                SharedPreferences prefs = getSharedPreferences(
-                        Globals.preferencesFile, 0);
+                SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_shared_prefs), Context.MODE_PRIVATE);
 
-                prefs.edit().putBoolean("splash", Globals.showSplash).commit();
-                prefs.edit().putBoolean("lightTheme", checkboxLightTheme.isChecked()).commit();
+                prefs.edit().putBoolean(getString(R.string.settings_pref_splash_enabled), checkboxSplashScreen.isChecked()).commit();
+                prefs.edit().putBoolean(getString(R.string.settings_pref_theme_light), checkboxLightTheme.isChecked()).commit();
 
                 Log.d("Settings", "Saved");
 
@@ -230,11 +222,12 @@ public class ListActivity extends ActionBarActivity {
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        private String[] sectionTitles;
+        private ArrayList<String> sectionTitles = new ArrayList<>();
         public ViewPagerAdapter(FragmentManager fm) {
 
             super(fm);
-            sectionTitles = getResources().getStringArray(R.array.section_headers);
+            DatabaseHelper dbHelper = new DatabaseHelper(ListActivity.this);
+            sectionTitles = dbHelper.getCategories();
         }
 
         @Override
@@ -250,24 +243,13 @@ public class ListActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return sectionTitles.length;
+            return sectionTitles.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return sectionTitles[position];
+            return sectionTitles.get(position);
         }
 
     }
-
-	public void replaceFragment(int resId, Fragment fragment,
-			String backStackName) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(resId, fragment);
-		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		if (backStackName != null) {
-			ft.addToBackStack(backStackName);
-		}
-		ft.commit();
-	}
 }
