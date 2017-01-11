@@ -175,9 +175,6 @@ public class ListActivity extends ActionBarActivity {
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_shared_prefs), Context.MODE_PRIVATE);
 
-        Log.e("Fuck", "You: " + prefs.getBoolean(getString(R.string.settings_pref_theme_light), false));
-        Log.e("Fuck", "You: " + prefs.getBoolean(getString(R.string.settings_pref_splash_enabled), false));
-
         checkboxLightTheme.setChecked(prefs.getBoolean(getString(R.string.settings_pref_theme_light), false));
         checkboxSplashScreen.setChecked(prefs.getBoolean(getString(R.string.settings_pref_splash_enabled), true));
 
@@ -192,7 +189,7 @@ public class ListActivity extends ActionBarActivity {
                 prefs.edit().putBoolean(getString(R.string.settings_pref_splash_enabled), checkboxSplashScreen.isChecked()).commit();
                 prefs.edit().putBoolean(getString(R.string.settings_pref_theme_light), checkboxLightTheme.isChecked()).commit();
 
-                Log.d("Settings", "Saved");
+                Log.i("Settings", "Saved");
 
                 // TODO - Switch themes
 
