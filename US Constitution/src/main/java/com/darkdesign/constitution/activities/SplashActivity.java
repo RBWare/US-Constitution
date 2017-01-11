@@ -42,6 +42,8 @@ import com.darkdesign.constitution.sql.DatabaseHelper;
 
 
 public class SplashActivity extends Activity {
+	
+	private final String LOG_TAG = "SplashActivity";
 
     private final int DEFAULT_SPLASH_DISPLAY_LENGTH = 2500;
     private int mSplashDisplayLength;
@@ -63,18 +65,18 @@ public class SplashActivity extends Activity {
 
 
         if (databaseExists() && htmlExists()){
-            Log.d("Splash", "No file setup needed");
+            Log.v(LOG_TAG, "No file setup needed");
             startSplashTimer();
         } else {
             setContentView(R.layout.splash);
 
             mDbHelper = new DatabaseHelper(this);
             mIsContentDisplayed = true;
-            Log.d("Splash", "Some files not found, setup starting");
+            Log.v(LOG_TAG, "Some files not found, setup starting");
             new SetupAsyncTask(this).execute();
         }
     }
-
+    
     private void startSplashTimer(){
         // If we show splash, default delay, if not, 0 for handler delay time in ms
         mSplashDisplayLength = isDisplaySplash() ? DEFAULT_SPLASH_DISPLAY_LENGTH : 0;
@@ -113,7 +115,7 @@ public class SplashActivity extends Activity {
             try  {
                 //Copy the database from assets
                 copyDatabase();
-                Log.d("Splash", "Database created");
+                Log.i(LOG_TAG, "Database created");
             }
             catch (IOException mIOException) {
                 throw new Error("ErrorCopyingDataBase");
@@ -150,7 +152,7 @@ public class SplashActivity extends Activity {
         editor.putBoolean(getString(R.string.settings_pref_splash_enabled), true).commit();
         editor.putBoolean(getString(R.string.settings_pref_theme_light), false).commit();
 
-        Log.d("Splash", "SharedPrefs setup completed.");
+        Log.i(LOG_TAG, "SharedPrefs setup completed.");
     }
 
     private void copyDatabase() throws IOException {
@@ -190,27 +192,28 @@ public class SplashActivity extends Activity {
             writeTextToFile(fileName, currentVariantHtml);
         }
 
-        Log.d("Splash", "HTML setup completed.");
+        Log.v(LOG_TAG, "HTML setup completed.");
     }
 
     private boolean writeTextToFile(String fileName, String fileText) {
+        
         try {
-
-
             File root = new File(getFilesDir().getPath() + "/www/");
+            
             if (!root.exists())
                 root.mkdirs();
 
             File fileToWrite = new File(root, fileName);
             FileWriter writer = new FileWriter(fileToWrite);
+        
             writer.append(fileText);
             writer.flush();
             writer.close();
 
-            Log.d("Splash", "File written: " + fileName);
+            Log.v(LOG_TAG, "File written: " + fileName);
             return true;
         } catch (IOException e) {
-            Log.e("Splash", "IOException creating HTML file");
+            Log.e(LOG_TAG, "IOException creating HTML file");
             return false;
         }
     }
@@ -223,6 +226,7 @@ public class SplashActivity extends Activity {
 
             int size = stream.available();
             byte[] buffer = new byte[size];
+            
             stream.read(buffer);
             stream.close();
             fileData = new String(buffer);
@@ -250,7 +254,7 @@ public class SplashActivity extends Activity {
             try {
                 setupDatabase();
             } catch(IOException e){
-                Log.e("Splash", "Database setup failed!");
+                Log.e(LOG_TAG, "Database setup failed!");
             }
         }
 
