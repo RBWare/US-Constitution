@@ -113,9 +113,6 @@ public class DetailsActivity extends ActionBarActivity {
                 i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(mEntryItems.get(mDetailsViewPager.getCurrentItem()).getWikipediaUrl()));
                 break;
-            case R.id.action_item_search:
-
-                break;
             default:
                 return false;
         }
