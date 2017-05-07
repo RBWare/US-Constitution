@@ -2,12 +2,10 @@ package com.darkdesign.constitution.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +13,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.darkdesign.constitution.R;
-import com.darkdesign.constitution.models.DataObject;
-import com.darkdesign.constitution.sql.DatabaseHelper;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by ryan on 5/19/16.
@@ -56,7 +49,7 @@ public class DetailsFragment extends Fragment {
 
         mCurrentItemId = getArguments().getInt("itemId");
 
-        View layout = inflater.inflate(R.layout.view_information, container, false);
+        View layout = inflater.inflate(R.layout.fragment_details, container, false);
         mWebView = (WebView) layout.findViewById(R.id.content_frame);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.settings_shared_prefs), Context.MODE_PRIVATE);

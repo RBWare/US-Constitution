@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.v4.app.ListFragment;
 
 import android.view.LayoutInflater;
@@ -49,7 +48,7 @@ public class ListItemFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		return inflater.inflate(R.layout.list_item_fragment, null);
+		return inflater.inflate(R.layout.fragment_list, null);
 	}
 
 	@Override
@@ -63,11 +62,10 @@ public class ListItemFragment extends ListFragment {
 			mTabIndex = bundle.getInt("tabIndex", 0);
         }
 
-		ArrayList<ListObject> listItems = new ArrayList<>();
 		DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
 
-		listItems = dbHelper.getEntryListByCategoryId(mTabIndex);
-        mListView.setAdapter(new ListEntryAdapter(getActivity(), R.layout.row, listItems));
+		ArrayList<ListObject> listItems  = dbHelper.getEntryListByCategoryId(mTabIndex);
+        mListView.setAdapter(new ListEntryAdapter(getActivity(), R.layout.listview_row, listItems));
         mListView.setOnItemClickListener(listClickListener);
 	}
 
@@ -98,10 +96,10 @@ public class ListItemFragment extends ListFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-            convertView = inflater.inflate(R.layout.row, parent, false);
+            convertView = inflater.inflate(R.layout.listview_row, parent, false);
 
-			TextView textviewTitle = (TextView) convertView.findViewById(R.id.label);
-			TextView textviewSubtitle = (TextView) convertView.findViewById(R.id.title);
+			TextView textviewTitle = (TextView) convertView.findViewById(R.id.textview_main_text);
+			TextView textviewSubtitle = (TextView) convertView.findViewById(R.id.textview_sub_title);
 
 			textviewTitle.setText(mListObjects.get(position).getTitle());
 			textviewSubtitle.setText(mListObjects.get(position).getSubTitle());

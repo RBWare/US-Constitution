@@ -15,15 +15,12 @@
 
 package com.darkdesign.constitution.activities;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 import com.darkdesign.constitution.R;
 
@@ -68,25 +65,25 @@ public class SplashActivity extends Activity {
             Log.v(LOG_TAG, "No file setup needed");
             startSplashTimer();
         } else {
-            setContentView(R.layout.splash);
+            setContentView(R.layout.activity_splash);
 
             mDbHelper = new DatabaseHelper(this);
             mIsContentDisplayed = true;
             Log.v(LOG_TAG, "Some files not found, setup starting");
-            new SetupAsyncTask(this).execute();
+            new SetupAsyncTask().execute();
         }
     }
     
     private void startSplashTimer(){
-        // If we show splash, default delay, if not, 0 for handler delay time in ms
+        // If we show activity_splash, default delay, if not, 0 for handler delay time in ms
         mSplashDisplayLength = isDisplaySplash() ? DEFAULT_SPLASH_DISPLAY_LENGTH : 0;
 
         if (mSplashDisplayLength != 0 && !mIsContentDisplayed)
-            setContentView(R.layout.splash);
+            setContentView(R.layout.activity_splash);
 
         /*
          * Handler to start the main activity and close this
-         * splash screen after some seconds.
+         * activity_splash screen after some seconds.
          */
         new Handler().postDelayed(new Runnable() {
             // @Override
@@ -112,14 +109,9 @@ public class SplashActivity extends Activity {
     private void setupDatabase() throws IOException {
 
         if(!databaseExists()) {
-            try  {
-                //Copy the database from assets
-                copyDatabase();
-                Log.i(LOG_TAG, "Database created");
-            }
-            catch (IOException mIOException) {
-                throw new Error("ErrorCopyingDataBase");
-            }
+            //Copy the database from assets
+            copyDatabase();
+            Log.i(LOG_TAG, "Database created");
         }
     }
 
@@ -171,7 +163,7 @@ public class SplashActivity extends Activity {
         Log.d("Splash", "Database copy completed.");
     }
 
-    private void setupHtmlFiles(Context context){
+    private void setupHtmlFiles(){
 
         // keep one instance of the HTML string! save both files right away!
 
@@ -180,7 +172,7 @@ public class SplashActivity extends Activity {
         String darkVariantCss = readAssetFile("style_dark.css");
 
         int entryCount = mDbHelper.getEntryCount();
-        for (int i = 0; i < entryCount; i++){
+        for (int i = 0; i <= entryCount; i++){
             String htmlData = mDbHelper.getHTMLDataForEntry(i);
 
             String currentVariantHtml = htmlData.replace(CSS_REPLACE_KEY, lightVariantCss);
@@ -239,12 +231,7 @@ public class SplashActivity extends Activity {
 
     private class SetupAsyncTask extends AsyncTask<Void, Integer, Void>{
 
-        private Context mContext;
         private ProgressDialog mProgressDialog;
-
-        public SetupAsyncTask(Context context){
-            mContext = context;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -253,7 +240,7 @@ public class SplashActivity extends Activity {
             setupSharedPrefs();
             try {
                 setupDatabase();
-            } catch(IOException e){
+            } catch(Exception e){
                 Log.e(LOG_TAG, "Database setup failed!");
             }
         }
@@ -266,8 +253,7 @@ public class SplashActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            setupHtmlFiles(mContext);
+            setupHtmlFiles();
 //            mProgressDialog.dismiss();
             startSplashTimer();
         }
