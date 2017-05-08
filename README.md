@@ -3,7 +3,13 @@ US-Constitution
 
 [![Build Status](https://travis-ci.org/RBWare/US-Constitution.svg?branch=add_travis_support)](https://travis-ci.org/RBWare/US-Constitution)
 
-The United States Constituion applicaiton was one of the first 2000 applications available on the Android platform. It arrived to the Android Market prior to the 1.5 launch and has undergone many revisions since that time. It uses the open source libraries ActionBarSherlock and HoloEverywhere to maintain compatibility with devices prior to Android 4.x (2.2+ is supported). The application was originally just a proof-of-concept for a college project but has been maintained with several updates since its original launch. I'm making the code available for other developers who are interested in creating similar projects.
+The United States Constituion applicaiton was one of the first 2000 applications available on the Android platform. It arrived to the Android Market prior to the 1.5 launch and has undergone many revisions since that time. The application was originally just a proof-of-concept for a college project but has been maintained with several updates since its original launch. I'm making the code available for other developers who are interested in creating similar projects.
+
+### Latest Release
+- Build Number: 14
+- App Version: 4.0
+- minSDK: 14 (4.0.1)
+- targetSDK: 25 (7.x)
 
 
 License
