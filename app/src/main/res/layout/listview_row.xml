@@ -9,16 +9,18 @@
 		android:id="@+id/textview_main_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="18sp"
+		android:textSize="@dimen/row_text_size_title"
 		android:maxLines="1"
-		android:layout_marginLeft="12dip"
+		android:layout_marginLeft="@dimen/row_left_padding"
+		android:layout_marginTop="@dimen/row_text_top_padding"
 		/>
 	<TextView
 		android:id="@+id/textview_sub_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="12sp"
+		android:textSize="@dimen/row_text_size_sub_title"
 		android:maxLines="1"
-		android:layout_marginLeft="12dip"
+		android:layout_marginLeft="@dimen/row_left_padding"
+		android:layout_marginBottom="@dimen/row_text_bottom_padding"
 		/>
 </LinearLayout>

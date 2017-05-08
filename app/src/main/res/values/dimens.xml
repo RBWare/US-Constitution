@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="row_left_padding">12dp</dimen>
+    <dimen name="row_text_top_padding">8dp</dimen>
+    <dimen name="row_text_bottom_padding">8dp</dimen>
+
+    <dimen name="row_text_size_title">18sp</dimen>
+    <dimen name="row_text_size_sub_title">12sp</dimen>
+</resources>
